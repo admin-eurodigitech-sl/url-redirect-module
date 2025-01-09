@@ -107,12 +107,12 @@ How does internationalization and localization — translations, time zones, uni
 
 ## ⏳ Work estimates ⏳
 
-- Phase 1: Requirements Gathering & Analysis – 1 week
-- Phase 2: Solution Design – 2 weeks
-- Phase 3: Development & Integration – 4–6 weeks
-- Phase 4: Testing – 1 week
-- Phase 5: Deployment & Monitoring – 1-2 weeks
-- Phase 6: Post-Launch & Maintenance – Review 1 month later
+- Requirements Gathering & Analysis: 1 week
+- Solution Design: 2 weeks
+- Development & Integration:  4–6 weeks
+- Testing: 1 week
+- Deployment & Monitoring: 1-2 weeks
+- Post-Launch & Maintenance: Review after 1 month of life
 
 Total: 9-12 weeks
 
