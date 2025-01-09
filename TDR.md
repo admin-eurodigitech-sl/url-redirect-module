@@ -178,8 +178,7 @@ WiP
 - [AWS](https://aws.amazon.com/).
 - [NodeJS](https://nodejs.org/en).
 - [NextJS](https://nextjs.org/docs).
-- [CDN]("https://www.akamai.com/glossary/what-is-a-cdn#:~:text=A%20content%20delivery%20network%20(CDN,closer%20to%20where%20users%20are").
-- [Reverse Proxy](https://www.zscaler.com/es/resources/security-terms-glossary/what-is-reverse-proxy)
+- [Reverse Proxy / CDN](https://www.zscaler.com/es/resources/security-terms-glossary/what-is-reverse-proxy)
 - [Relational DDBB](https://aws.amazon.com/dynamodb/).
 - [Grafana K6](https://k6.io/).
 
