@@ -102,22 +102,23 @@ How does internationalization and localization — translations, time zones, uni
 
 <br></br>
 
-## 
-
-
 ## ⏳ Work estimates ⏳
 
-- Requirements Gathering & Analysis: 1 week
-- Solution Design: 2 weeks
-- Development & Integration:  4–6 weeks
-- Testing: 1 week
-- Deployment & Monitoring: 1-2 weeks
-- Post-Launch & Maintenance: Review after 1 month of life
+### Phases
 
-Total: 9-12 weeks
+- Phase 1 - Gathering requirements & Analysis: 1 week
+- Phase 2 - Solution Design: 1 weeks
+- Phase 3 - Development & Integration:  3 weeks
+- Phase 4 - Testing: 1 week
+- Phase 5 - Deployment & Monitoring: 2 weeks
 
-<br></br>
+**Delivery in 7-8 weeks**
 
+### Team
+
+- UX/UI (10 FTEs): 1 x 2 weeks (Phase 1 and Phase 2)
+- Fullstack Developer (40 FTEs):  1 x 7-8 weeks dedicated to Rule Manager backoffice & CRUD. 
+- Backend Developer & DevOps (40 FTEs): 1 x 7-8 weeks dedicated to Infra & Microservice.
 
 ## 🚀 Roll-out plan 🚀
 
