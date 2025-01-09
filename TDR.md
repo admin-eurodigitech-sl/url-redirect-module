@@ -177,7 +177,7 @@ WiP
 - [AWS / GCP]().
 - [Node]().
 - [NextJS]().
-- [CDN]().
+- [CDN / Reverse Proxy]().
 - [Relational DDBB]().
 
 
