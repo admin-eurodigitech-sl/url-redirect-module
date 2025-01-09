@@ -113,7 +113,6 @@ How does internationalization and localization — translations, time zones, uni
 
     <img title="architecture schema" alt="Alt text" width="700px" height="auto" src="./traffic_flow.png">
 
-
 6. **Logging and Analytics**:
    - Use **structured logging** to capture detailed information about redirects:
      - **Rule ID**: Identifier for the redirect rule.
@@ -132,7 +131,8 @@ How does internationalization and localization — translations, time zones, uni
 
 ## 🎨 Mockups and wireframes 🎨
 
-WiP
+<img title="architecture schema" alt="Alt text" width="700px" height="auto" src="./ui_mockup.png">
+
 
 <br></br>
 
@@ -173,8 +173,6 @@ WiP
 
 
 ## 🤖 Tech Stack 🤖
-
-WiP
 
 - [AWS / GCP]().
 - [Node]().
