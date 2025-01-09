@@ -176,9 +176,11 @@ WiP
 
 WiP
 
-- []().
-- []().
-- []().
-- []().
+- [AWS / GCP]().
+- [Node]().
+- [NextJS]().
+- [CDN]().
+- [Relational DDBB]().
+
 
 <br></br>
