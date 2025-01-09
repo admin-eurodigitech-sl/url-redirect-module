@@ -150,7 +150,7 @@ In this case this solution is ment to be developed using components from AWS or 
 ### Phases
 
 - Phase 1 - Gathering requirements & Analysis: 1 week
-- Phase 2 - Solution Design: 1 weeks
+- Phase 2 - Solution Design & Validation: 1 weeks
 - Phase 3 - Development & Integration:  3 weeks
 - Phase 4 - Testing: 1 week
 - Phase 5 - Deployment & Monitoring: 2 weeks
