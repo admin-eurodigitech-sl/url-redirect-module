@@ -174,11 +174,14 @@ WiP
 
 ## 🤖 Tech Stack 🤖
 
-- [AWS / GCP]().
-- [Node]().
-- [NextJS]().
-- [CDN / Reverse Proxy]().
-- [Relational DDBB]().
+- [GCP](https://cloud.google.com/gcp/).
+- [AWS](https://aws.amazon.com/).
+- [NodeJS](https://nodejs.org/en).
+- [NextJS](https://nextjs.org/docs).
+- [CDN](https://www.akamai.com/glossary/what-is-a-cdn#:~:text=A%20content%20delivery%20network%20(CDN,closer%20to%20where%20users%20are.).
+- [Reverse Proxy](https://www.zscaler.com/es/resources/security-terms-glossary/what-is-reverse-proxy)
+- [Relational DDBB](https://aws.amazon.com/dynamodb/).
+- [Grafana K6](https://k6.io/).
 
 
 <br></br>
