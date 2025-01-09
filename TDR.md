@@ -20,28 +20,32 @@ Check this document for more context on the solution: https://app.clickup.com/30
 
 <br></br>
 
-## ⚓ Goals, non-goals, and future goals ⚓
+## 📚 USER REQUIREMENTS 📚
+- Site Restructuring: Redirect old URLs to new locations to maintain SEO value and user experience.
+- Redirecting discontinued product URLs to replacement products or category pages (Product Lifecycle Management).
+- Handling seasonal products.
+- Creating short & memorable URLs for marketing campaigns that redirect to specific LPs.
+- Brand Consolidation: When merging multiple brands or websites into a single e-commerce platform.
+- URL Normalization: redirecting uppercase URLs to lowercase, removing unnecessary parameters or standardizing product URL patterns.
+- Typo Correction.
+- Geolocation-based Redirects.
+- A/B Testing.
+- Migrating old e-commerce platform to SFCC.
+- Creating easy-to-remember URLs (Vanity URLs) that redirect to more complex URLs.
+- Redirecting HTTP to HTTPS for (SSL Enforcement).
 
 <br></br>
 
-
-### ✅ Goals ✅
-
-<!-- In order to build alignment and communicate a definition of done, it is important to clearly articulate the goals of this work. The best goals are simple, truthy sentences that describe a future state of the world. Unlike an OKR, it’s fine for these goals to be hyper-specific. Projects will often have 3-5 goals. -->
-
-<br></br>
-
-
-### ❌ Non Goals ❌
-
-<!-- As well as explaining what you want to achieve, it is equally important to say what you are explicitly not addressing. These can sometimes be hard to identify, but imagine what another person might expect to be coupled with this work. -->
-
-<br></br>
-
-### 🤞🏻  Future Goals 🤞🏻
-
-<!-- Future goals are an opportunity to list things you want to do in the future, but have descoped for this phase of the project. In other words, these are things you want to make sure your solution doesn’t accidentally make difficult or 
-impossible. -->
+## ⚓ FEATURES ⚓
+- Admin interface for Business Manager to configure redirects.
+- Rules storage: Database and JSON so it can be cached by CDN.
+- Request handling.
+- URL matching by pattern.
+- Redirect execution based on rule setup.
+- Logging & Analytics using tracke ids.
+- Performance optimization via cache.
+- Bulk Import/Export via CSV.
+- Language-specific redirects for multi-language sites.
 
 <br></br>
 
@@ -63,35 +67,72 @@ Are there any web-specific considerations?
 How will the changes be tested?
 How does internationalization and localization — translations, time zones, unicode, etc. — affect your solution? -->
 
-### USER REQUIREMENTS
-- Site Restructuring: Redirect old URLs to new locations to maintain SEO value and user experience.
-- Redirecting discontinued product URLs to replacement products or category pages (Product Lifecycle Management).
-- Handling seasonal products.
-- Creating short & memorable URLs for marketing campaigns that redirect to specific LPs.
-- Brand Consolidation: When merging multiple brands or websites into a single e-commerce platform.
-- URL Normalization: redirecting uppercase URLs to lowercase, removing unnecessary parameters or standardizing product URL patterns.
-- Typo Correction.
-- Geolocation-based Redirects.
-- A/B Testing.
-- Migrating old e-commerce platform to SFCC.
-- Creating easy-to-remember URLs (Vanity URLs) that redirect to more complex URLs.
-- Redirecting HTTP to HTTPS for (SSL Enforcement).
+### Architecture
 
-### FEATURES
-- Admin interface for Business Manager to configure redirects.
-- Rules storage: Database and JSON so it can be cached by CDN.
-- Request handling.
-- URL matching by pattern.
-- Redirect execution based on rule setup.
-- Logging & Analytics using tracke ids.
-- Performance optimization via cache.
-- Bulk Import/Export via CSV.
-- Language-specific redirects for multi-language sites.
+1. **Admin Interface**:
+   - Implemented as a **Next.js** application.
+   - Allows merchants to manage redirects via a clean, user-friendly interface.
+   - Supports CRUD operations, bulk CSV import/export, and validation of regex patterns.
+
+   Since we decoupled the backend from the API from the frontend we can have multiple frontends using the same API endpoints. This means we can integrate this solution into different ecommerces like Shopware or Commerce Tools.
+
+2. **Redirect Rule CRUD APIs**:
+   - Expose RESTful APIs for managing redirects:
+     - `GET /redirects`: Fetch all redirects.
+     - `POST /redirects`: Create a new redirect.
+     - `PUT /redirects/{id}`: Update an existing redirect.
+     - `DELETE /redirects/{id}`: Remove a redirect.
+     - **Bulk Import**: API to upload CSV files with redirect rules.
+     - **Bulk Export**: API to download all redirect rules in CSV format.
+
+3. **Backend Storage (DynamoDB)**:
+   - A **DynamoDB table** stores each redirect rule.
+     - Fields:
+       - `regexPattern` (string): The regular expression to match the original URL.
+       - `targetUrl` (string): The URL to redirect to.
+       - `redirectType` (string): 301 or 302.
+       - `active` (boolean): Whether the redirect is currently active.
+       - `startDate` (Date, optional): When the redirect starts being active.
+       - `endDate` (Date, optional): When the redirect stops being active.
+       - `locale` (string, optional): The language/locale for localized redirects.
+       - `priority` (integer, optional): The priority for sorting the redirects.
+   - Query DynamoDB using regex to find a matching rule for the incoming request.
+
+4. **Request Handling and CDN Integration**: 
+   - **Early Intercept**: When an incoming request is received, the system will first check the cache (Redis). If not found, it will query DynamoDB.
+   - **CDN-Level Caching**: If the CDN supports the redirect rule, handle it directly at the edge to minimize load on the application server.
+   - **Application-Level Redirects**: For more complex or non-cacheable redirects, handle them at the application level using Node.js.
+
+5. **Traffic flow**:
+   - **Incoming Request**: A user accesses a URL on the e-commerce site (e.g., www.example.com/product/1234).
+   - **Reverse Proxy Handles Request**: The reverse proxy (Nginx, for example) intercepts the incoming request and forwards it to your microservice.
+   - **URL Rule Evaluation**: The microservice evaluates the incoming URL against the set of predefined rewrite rules.
+    If a match is found (e.g., product/1234 should redirect to product/5678), the microservice returns a redirect response (e.g., HTTP 301 - Permanent Redirect) to the reverse proxy, indicating the new target URL.
+   - **Forward to E-commerce Site or Redirect**: If the URL matches a rule, the reverse proxy sends the redirect response back to the user.
+    If no match is found, the reverse proxy forwards the original request to the e-commerce site as usual.
+
+    <img title="architecture schema" alt="Alt text" width="700px" height="auto" src="./traffic_flow.png">
+
+
+6. **Logging and Analytics**:
+   - Use **structured logging** to capture detailed information about redirects:
+     - **Rule ID**: Identifier for the redirect rule.
+     - **Matched URL**: The URL being redirected.
+     - **Target URL**: The destination URL.
+     - **Timestamp**: When the redirect occurred.
+   - Store logs in a central logging system (e.g., Elasticsearch, CloudWatch) for real-time analytics and monitoring.
+   - **CDN Logging**: If the CDN handles a redirect, logs are not generated by the application.
+
+7. **Failover / Backup**: If the microservice becomes unavailable. Possible strategies include:
+   - **Caching**: Cache the rewrite rules locally on the reverse proxy or CDN for a short period of time. This way, if the microservice is down, the rules will still be available for redirection. However, this requires careful cache invalidation to avoid using outdated rules.
+   - **Fallback Behavior**: Define fallback behavior for when the microservice is unavailable, such as defaulting to a "No Redirect" action or serving an error page.
+    
 
 <br></br>
 
-
 ## 🎨 Mockups and wireframes 🎨
+
+WiP
 
 <br></br>
 
@@ -99,6 +140,8 @@ How does internationalization and localization — translations, time zones, uni
 ## 💣 Third-party considerations 💣
 
 <!-- Today it is common to rely on 3rd party platforms to support our development work, whether this be part of AWS or GCP, or a whole separate service. It’s worth thinking through the implications of using a third-party and looking ahead for potential future issues. -->
+
+In this case this solution is ment to be developed using components from AWS or Google Cloud Platform both having a 99.99% uptime and very good reliability.
 
 <br></br>
 
@@ -116,41 +159,26 @@ How does internationalization and localization — translations, time zones, uni
 
 ### Team
 
-- UX/UI (10 FTEs): 1 x 2 weeks (Phase 1 and Phase 2)
-- Fullstack Developer (40 FTEs):  1 x 7-8 weeks dedicated to Rule Manager backoffice & CRUD. 
-- Backend Developer & DevOps (40 FTEs): 1 x 7-8 weeks dedicated to Infra & Microservice.
+- UX/UI (10 FTE): 1 x 2 weeks (Phase 1 and Phase 2)
+- Fullstack Developer (40 FTE):  1 x 7-8 weeks dedicated to Rule Manager backoffice & CRUD. 
+- Backend Developer & DevOps (40 FTE): 1 x 7-8 weeks dedicated to Infra & Microservice.
+
+**Cost: 90 FTE**
 
 ## 🚀 Roll-out plan 🚀
 
-<br></br>
-
-
-## 🎢 Alternative approaches 🎢
+WiP
 
 <br></br>
 
 
 ## 🤖 Tech Stack 🤖
 
+WiP
+
 - []().
 - []().
 - []().
 - []().
 
 <br></br>
-
-## 📚 Resources 📚
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/RaulCatedra3003/Local-FileSystem-explorer.svg?style=flat-square
-[contributors-url]: https://github.com/RaulCatedra3003/Local-FileSystem-explorer/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/RaulCatedra3003/Local-FileSystem-explorer.svg?style=flat-square
-[forks-url]: https://github.com/RaulCatedra3003/Local-FileSystem-explorer/network/members
-[stars-shield]: https://img.shields.io/github/stars/RaulCatedra3003/Local-FileSystem-explorer.svg?style=flat-square
-[stars-url]: https://github.com/RaulCatedra3003/Local-FileSystem-explorer/stargazers
-[issues-shield]: https://img.shields.io/github/issues/RaulCatedra3003/Local-FileSystem-explorer.svg?style=flat-square
-[issues-url]: https://github.com/RaulCatedra3003/Local-FileSystem-explorer/issues
-[license-shield]: https://img.shields.io/github/license/RaulCatedra3003/Local-FileSystem-explorer.svg?style=flat-square
-[license-url]: https://github.com/RaulCatedra3003/Local-FileSystem-explorer/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
