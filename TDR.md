@@ -155,13 +155,13 @@ In this case this solution is ment to be developed using components from AWS or 
 - Phase 4 - Testing: 1 week
 - Phase 5 - Deployment & Monitoring: 2 weeks
 
-**Delivery in 7-8 weeks**
+**Delivery in 8 weeks**
 
 ### Team
 
 - UX/UI (10 FTE): 1 x 2 weeks (Phase 1 and Phase 2)
-- Fullstack Developer (40 FTE):  1 x 7-8 weeks dedicated to Rule Manager backoffice & CRUD. 
-- Backend Developer & DevOps (40 FTE): 1 x 7-8 weeks dedicated to Infra & Microservice.
+- Fullstack Developer (40 FTE):  1 x 8 weeks dedicated to Rule Manager backoffice & CRUD. 
+- Backend Developer & DevOps (40 FTE): 1 x 8 weeks dedicated to Infra & Microservice.
 
 **Cost: 90 FTE**
 
